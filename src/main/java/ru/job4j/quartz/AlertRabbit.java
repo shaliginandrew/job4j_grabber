@@ -17,7 +17,7 @@ public class AlertRabbit {
     public static void main(String[] args) throws IOException {
 
         Properties props = new Properties();
-        props.load(new FileInputStream("C:\\Projects\\job4j_grabber\\src\\main\\resources\\rabbit.properties"));
+        props.load(new FileInputStream("./src/main/resources/rabbit.properties"));
         PropertyConfigurator.configure(props);
 
         try {
