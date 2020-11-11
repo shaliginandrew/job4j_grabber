@@ -33,12 +33,10 @@ public class AlertRabbit {
 
 
     public void timer(Properties properties) {
-
         try {
             Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
             scheduler.start();
             JobDetail job = newJob(Rabbit.class).build();
-
             SimpleScheduleBuilder times = simpleSchedule()
                     .withIntervalInSeconds(Integer.parseInt(props.getProperty("rabbit.interval")))
                     .repeatForever();
