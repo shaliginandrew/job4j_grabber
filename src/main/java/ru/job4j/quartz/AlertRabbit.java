@@ -4,10 +4,13 @@ import org.apache.log4j.PropertyConfigurator;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import static org.quartz.JobBuilder.*;
@@ -15,28 +18,32 @@ import static org.quartz.TriggerBuilder.*;
 import static org.quartz.SimpleScheduleBuilder.*;
 
 public class AlertRabbit {
-    Properties props;
-
-    public AlertRabbit(Properties props) {
-        this.props = props;
-    }
-
-    public Properties init() throws IOException {
+    public static void main(String[] args) {
+        Properties props = new Properties();
         try (InputStream in = AlertRabbit.class.getClassLoader().getResourceAsStream("rabbit.properties")) {
             props.load(in);
             PropertyConfigurator.configure(props);
-        } catch (IOException e) {
+            Class.forName(props.getProperty("driver-class-name"));
+            Connection connection = DriverManager.getConnection(
+                    props.getProperty("url"),
+                    props.getProperty("username"),
+                    props.getProperty("password")
+            );
+
+        } catch (IOException | SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
-        return props;
-    }
 
 
-    public void timer(Properties properties) {
         try {
+            List<Long> store = new ArrayList<>();
             Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
             scheduler.start();
-            JobDetail job = newJob(Rabbit.class).build();
+            JobDataMap data = new JobDataMap();
+            data.put("store", store);
+            JobDetail job = newJob(Rabbit.class)
+                    .usingJobData(data)
+                    .build();
             SimpleScheduleBuilder times = simpleSchedule()
                     .withIntervalInSeconds(Integer.parseInt(props.getProperty("rabbit.interval")))
                     .repeatForever();
@@ -45,15 +52,12 @@ public class AlertRabbit {
                     .withSchedule(times)
                     .build();
             scheduler.scheduleJob(job, trigger);
-        } catch (SchedulerException se) {
+            Thread.sleep(5000);
+            scheduler.shutdown();
+            System.out.println(store);
+        } catch (Exception se) {
             se.printStackTrace();
         }
-
-    }
-
-    public static void main(String[] args) throws IOException {
-        AlertRabbit rabbit = new AlertRabbit(new Properties());
-        rabbit.timer(rabbit.init());
     }
 
     public static class Rabbit implements Job {
@@ -65,6 +69,8 @@ public class AlertRabbit {
         @Override
         public void execute(JobExecutionContext context) throws JobExecutionException {
             System.out.println("Rabbit runs here ...");
+            List<Long> store = (List<Long>) context.getJobDetail().getJobDataMap().get("store");
+            store.add(System.currentTimeMillis());
         }
     }
 }
