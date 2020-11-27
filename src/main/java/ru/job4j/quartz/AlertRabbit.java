@@ -19,12 +19,14 @@ import static org.quartz.SimpleScheduleBuilder.*;
 
 public class AlertRabbit {
     private Properties props;
+    Connection cn;
 
-    public AlertRabbit(Properties props) {
+    public AlertRabbit(Properties props, Connection cn) {
         this.props = props;
+        this.cn = cn;
     }
 
-    public void init() {
+    public Properties initProps() {
 
         try (InputStream in = AlertRabbit.class.getClassLoader().getResourceAsStream("rabbit.properties")) {
             props.load(in);
@@ -34,6 +36,7 @@ public class AlertRabbit {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return props;
     }
 
     public void timer() {
@@ -64,10 +67,32 @@ public class AlertRabbit {
 
     }
 
-    public static void main(String[] args) {
-        AlertRabbit rabbit = new AlertRabbit(new Properties());
-        rabbit.init();
-        rabbit.timer();
+
+    public Connection initConnect(Properties props) throws ClassNotFoundException, SQLException {
+
+        try {
+            Class.forName(props.getProperty("driver-class-name"));
+            cn = DriverManager.getConnection(
+                    props.getProperty("url"),
+                    props.getProperty("username"),
+                    props.getProperty("password")
+            );
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return cn;
+    }
+
+    public static void main(String[] args) throws SQLException, ClassNotFoundException {
+        AlertRabbit rabbit = new AlertRabbit(new Properties(), null);
+        Properties properties = rabbit.initProps();
+        try (Connection connection = rabbit.initConnect(properties)) {
+            rabbit.timer();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     public static class Rabbit implements Job {
