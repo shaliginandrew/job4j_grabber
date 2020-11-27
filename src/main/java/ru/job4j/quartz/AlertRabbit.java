@@ -18,22 +18,25 @@ import static org.quartz.TriggerBuilder.*;
 import static org.quartz.SimpleScheduleBuilder.*;
 
 public class AlertRabbit {
-    public static void main(String[] args) {
-        Properties props = new Properties();
+    private Properties props;
+
+    public AlertRabbit(Properties props) {
+        this.props = props;
+    }
+
+    public void init() {
+
         try (InputStream in = AlertRabbit.class.getClassLoader().getResourceAsStream("rabbit.properties")) {
             props.load(in);
             PropertyConfigurator.configure(props);
-            Class.forName(props.getProperty("driver-class-name"));
-            Connection connection = DriverManager.getConnection(
-                    props.getProperty("url"),
-                    props.getProperty("username"),
-                    props.getProperty("password")
-            );
 
-        } catch (IOException | SQLException | ClassNotFoundException e) {
+
+        } catch (IOException e) {
             e.printStackTrace();
         }
+    }
 
+    public void timer() {
 
         try {
             List<Long> store = new ArrayList<>();
@@ -52,12 +55,19 @@ public class AlertRabbit {
                     .withSchedule(times)
                     .build();
             scheduler.scheduleJob(job, trigger);
-            Thread.sleep(5000);
+            Thread.sleep(6000);
             scheduler.shutdown();
             System.out.println(store);
         } catch (Exception se) {
             se.printStackTrace();
         }
+
+    }
+
+    public static void main(String[] args) {
+        AlertRabbit rabbit = new AlertRabbit(new Properties());
+        rabbit.init();
+        rabbit.timer();
     }
 
     public static class Rabbit implements Job {
