@@ -13,6 +13,10 @@ import java.util.Calendar;
 import java.util.Locale;
 
 public class SqlRuParse {
+
+
+
+
     public static void main(String[] args) throws Exception {
         Document doc = Jsoup.connect("https://www.sql.ru/forum/job-offers").get();
         Elements row = doc.select(".postslisttopic");
@@ -69,14 +73,14 @@ public class SqlRuParse {
             if (text.contains("сегодня")) {
                 LocalDate localDate = LocalDate.now();
                 resultDate = localDate.toString();
-             //   resultTime = text.split(",")[1].trim();
+                resultTime = text.split(",")[1].trim();
             }
 
             if (text.contains("вчера")) {
                 Calendar c=Calendar.getInstance();
                 c.add(Calendar.DATE,-1);
                 resultDate = c.get(c.YEAR) + "-" + (c.get(c.MONTH)+1) + "-" + c.get(c.DAY_OF_MONTH);
-               // resultTime = text.split(",")[1].trim();
+                resultTime = text.split(",")[1].trim();
             }
 
 
@@ -91,7 +95,7 @@ public class SqlRuParse {
                 year = "20" + StringUtils.chop(d[2]);
 
                 resultDate = year + "-" + month + "-" + number ;
-                //resultTime = d[3];
+                resultTime = d[3].trim();
             }
 
 
@@ -102,12 +106,11 @@ public class SqlRuParse {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.ENGLISH);
             LocalDate dateNewFormat = LocalDate.parse(resultDate, dtf);
 
-           //DateTimeFormatter dt = DateTimeFormatter.ofPattern("HH:mm");
-          // LocalTime time = LocalTime.parse(resultTime, dtf);
-            System.out.println(dateNewFormat);
+           DateTimeFormatter dt = DateTimeFormatter.ofPattern("HH:mm", Locale.ENGLISH);
+           LocalTime time = LocalTime.parse(resultTime, dt);
+            System.out.println(dateNewFormat + " " + resultTime);
 
 
-             //System.out.println(date.text());
             System.out.println("---------------------------------------");
         }
     }
