@@ -10,14 +10,13 @@ import java.util.HashMap;
 public class ParsingDate {
     private String number = "";
     private String year = "";
-
+    final HashMap<String, String> MONTHS = new HashMap<String, String>();
 
     public Datap parsing(Element date) {
         Datap dt = new Datap();
-
         String text = date.text();
+        String[] d = text.split(" ");
 
-        final HashMap<String, String> MONTHS = new HashMap<String, String>();
         MONTHS.put("янв", "01");
         MONTHS.put("фев", "02");
         MONTHS.put("мар", "03");
@@ -31,33 +30,31 @@ public class ParsingDate {
         MONTHS.put("ноя", "11");
         MONTHS.put("дек", "12");
 
+        if(d.length == 2 && StringUtils.chop(d[0]).equals("сегодня")) {
 
-
-        if (text.contains("сегодня")) {
             LocalDate localDate = LocalDate.now();
             dt.resultDate = localDate.toString();
             dt.resultTime = text.split(",")[1].trim();
+
         }
-        if (text.contains("вчера")) {
+
+        if(d.length == 2 && StringUtils.chop(d[0]).equals("вчера")) {
+
             Calendar c = Calendar.getInstance();
             c.add(Calendar.DATE, -1);
             dt.resultDate = c.get(c.YEAR) + "-" + (c.get(c.MONTH) + 1) + "-" + c.get(c.DAY_OF_MONTH);
             dt.resultTime = text.split(",")[1].trim();
+
         }
-        if (!text.contains("сегодня") && !text.contains("вчера")) {
-            String[] d = text.split(" ");
-            if (d[0].length() == 1) {
-                number = "0" + d[0];
-            } else {
-                number = d[0];
-            }
+
+        if(d.length != 2) {
+            number = d[0];
             year = "20" + StringUtils.chop(d[2]);
             dt.resultDate = year + "-" + MONTHS.get(d[1]) + "-" + number;
             dt.resultTime = d[3].trim();
         }
         return dt;
     }
-
 
     public static class Datap {
 
