@@ -42,6 +42,8 @@ public class ParsingDate {
 
             Calendar c = Calendar.getInstance();
             c.add(Calendar.DATE, -1);
+
+
             dt.resultDate = c.get(c.YEAR) + "-" + (c.get(c.MONTH) + 1) + "-" + c.get(c.DAY_OF_MONTH);
             dt.resultTime = text.split(",")[1].trim();
 
