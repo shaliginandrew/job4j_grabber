@@ -104,16 +104,15 @@ public class AlertRabbit {
         @Override
         public void execute(JobExecutionContext context) throws JobExecutionException {
             System.out.println("Rabbit runs here ...");
-            Connection connection = (Connection) context.getJobDetail().getJobDataMap().get("connection");
-
-
-            try (PreparedStatement ps = connection.prepareStatement("insert into rabbit (created) values (?)",
-                    Statement.RETURN_GENERATED_KEYS)) {
-                ps.setTimestamp(1, new Timestamp(System.currentTimeMillis()));
-                ps.execute();
-                ResultSet keys = ps.getGeneratedKeys();
-
-            } catch (SQLException e) {
+            try {
+                Connection connection = (Connection) context.getJobDetail().getJobDataMap().get("connection");
+                try (PreparedStatement ps = connection.prepareStatement("insert into rabbit (created) values (?)",
+                        Statement.RETURN_GENERATED_KEYS)) {
+                    ps.setTimestamp(1, new Timestamp(System.currentTimeMillis()));
+                    ps.execute();
+                    ResultSet keys = ps.getGeneratedKeys();
+                }
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
