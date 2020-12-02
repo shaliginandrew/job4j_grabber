@@ -30,7 +30,7 @@ public class ParsingDate {
         MONTHS.put("ноя", "11");
         MONTHS.put("дек", "12");
 
-        if(d.length == 2 && StringUtils.chop(d[0]).equals("сегодня")) {
+        if (d.length == 2 && StringUtils.chop(d[0]).equals("сегодня")) {
 
             LocalDate localDate = LocalDate.now();
             dt.resultDate = localDate.toString();
@@ -38,7 +38,7 @@ public class ParsingDate {
 
         }
 
-        if(d.length == 2 && StringUtils.chop(d[0]).equals("вчера")) {
+        if (d.length == 2 && StringUtils.chop(d[0]).equals("вчера")) {
 
             Calendar c = Calendar.getInstance();
             c.add(Calendar.DATE, -1);
@@ -47,7 +47,7 @@ public class ParsingDate {
 
         }
 
-        if(d.length != 2) {
+        if (d.length != 2) {
             number = d[0];
             year = "20" + StringUtils.chop(d[2]);
             dt.resultDate = year + "-" + MONTHS.get(d[1]) + "-" + number;
@@ -66,5 +66,4 @@ public class ParsingDate {
             this.resultDate = resultDate;
         }
     }
-
 }

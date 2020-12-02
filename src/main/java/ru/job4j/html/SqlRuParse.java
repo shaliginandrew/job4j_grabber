@@ -30,19 +30,22 @@ public class SqlRuParse {
     public static void main(String[] args) throws Exception {
         int count = 0;
         SqlRuParse sqlRuParse = new SqlRuParse();
-        Document doc = Jsoup.connect("https://www.sql.ru/forum/job-offers").get();
-        Elements row = doc.select(".postslisttopic");
-        for (Element td : row) {
-            if (count > 2) {
-                Element href = td.child(0);
-                System.out.println(href.attr("href"));
-                System.out.println(href.text());
-                Element date = td.parent().child(5);
-                ParsingDate parsingDate = new ParsingDate();
-                parsingDate.parsing(date);
-                sqlRuParse.newFormat(parsingDate.parsing(date));
+        String addOne = "https://www.sql.ru/forum/job-offers/";
+        for (int i = 1; i <= 5; i++) {
+            Document doc = Jsoup.connect(addOne + String.valueOf(i)).get();
+            Elements row = doc.select(".postslisttopic");
+            for (Element td : row) {
+                if (count > 2) {
+                    Element href = td.child(0);
+                    System.out.println(href.attr("href"));
+                    System.out.println(href.text());
+                    Element date = td.parent().child(5);
+                    ParsingDate parsingDate = new ParsingDate();
+                    parsingDate.parsing(date);
+                    sqlRuParse.newFormat(parsingDate.parsing(date));
+                }
+                count++;
             }
-            count++;
         }
     }
 }
