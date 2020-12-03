@@ -4,8 +4,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.jsoup.nodes.Element;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Locale;
 
 public class ParsingDate {
     private String number = "";
@@ -57,6 +60,8 @@ public class ParsingDate {
             dt.resultDate = year + "-" + MONTHS.get(d[1]) + "-" + number;
             dt.resultTime = d[3].trim();
         }
+
+
         return dt;
     }
 
@@ -65,9 +70,12 @@ public class ParsingDate {
         String resultDate = "";
         String resultTime = "";
 
+
+
         public Datap() {
             this.resultTime = resultTime;
             this.resultDate = resultDate;
+
         }
     }
 }
