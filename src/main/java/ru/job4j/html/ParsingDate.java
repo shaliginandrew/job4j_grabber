@@ -10,25 +10,27 @@ import java.util.HashMap;
 public class ParsingDate {
     private String number = "";
     private String year = "";
-    final HashMap<String, String> MONTHS = new HashMap<String, String>();
+    final HashMap<String, String> MONTHS = new HashMap<>() {{
+        put("янв", "01");
+        put("фев", "02");
+        put("мар", "03");
+        put("апр", "04");
+        put("май", "05");
+        put("июн", "06");
+        put("июл", "07");
+        put("авг", "08");
+        put("сен", "09");
+        put("окт", "10");
+        put("ноя", "11");
+        put("дек", "12");
+    }};
+
 
     public Datap parsing(Element date) {
         Datap dt = new Datap();
         String text = date.text();
         String[] d = text.split(" ");
 
-        MONTHS.put("янв", "01");
-        MONTHS.put("фев", "02");
-        MONTHS.put("мар", "03");
-        MONTHS.put("апр", "04");
-        MONTHS.put("май", "05");
-        MONTHS.put("июн", "06");
-        MONTHS.put("июл", "07");
-        MONTHS.put("авг", "08");
-        MONTHS.put("сен", "09");
-        MONTHS.put("окт", "10");
-        MONTHS.put("ноя", "11");
-        MONTHS.put("дек", "12");
 
         if (d.length == 2 && StringUtils.chop(d[0]).equals("сегодня")) {
 
