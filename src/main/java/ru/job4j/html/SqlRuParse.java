@@ -13,18 +13,14 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 public class SqlRuParse {
+    ArrayList<Post> postData;
 
+    public SqlRuParse() {
+        this.postData = new ArrayList<>();
+    }
 
-        public static void loadPostDetails(Post postDetails) {
-
-            ArrayList<Post> postData = new ArrayList<>();
+        public  void loadPostDetails(Post postDetails) {
             postData.add(postDetails);
-
-            System.out.println(postDetails.getLink());
-            System.out.println(postDetails.getText());
-             System.out.println(postDetails.getCreatedDate());
-            System.out.println(postDetails.getCreatedTime());
-
         }
 
         public void parsingPage() throws IOException {
@@ -72,6 +68,15 @@ public class SqlRuParse {
 
             SqlRuParse sqlRuParse = new SqlRuParse();
             sqlRuParse.parsingPage();
+
+            for (Post t: sqlRuParse.postData) {
+                System.out.println(t.getLink());
+                System.out.println(t.getText());
+                System.out.println(t.getCreatedDate() + " " + t.getCreatedTime());
+
+            }
+
+
 
         }
     }
