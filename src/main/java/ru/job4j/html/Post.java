@@ -17,7 +17,7 @@ public class Post {
         this.createdTime = createdTime;
         this.link = link;
     }
-//
+
 
     public String getText() {
         return text;
