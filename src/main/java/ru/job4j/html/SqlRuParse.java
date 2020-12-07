@@ -37,7 +37,12 @@ public class SqlRuParse {
         ParsingDate parsingDate = new ParsingDate();
         String link = "https://www.sql.ru/forum/job-offers/";
         for (int i = 1; i <= 5; i++) {
+
+
             Document doc = Jsoup.connect(link + String.valueOf(i)).get();
+
+
+
             Elements row = doc.select(".postslisttopic");
             for (Element td : row) {
                 Element href = td.child(0);
@@ -47,13 +52,22 @@ public class SqlRuParse {
                     Element date = td.parent().child(5);
                     ParsingDate.Datap p = parsingDate.parsing(date);
                     dateAndTimeStandart(p);
-                    Post postDetails = new Post(href.attr("href"), href.text(), dateStandart, timeStandart);
+                    String description = description(href.attr("href"));
+                    Post postDetails = new Post(href.attr("href"), href.text(), description,  dateStandart, timeStandart);
                     loadPostDetails(postDetails);
                 }
             }
         }
     }
 
+    private static String description(String url) throws IOException {
+
+        Document doc = Jsoup.connect(url).get();
+        return doc
+                .select(".msgTable").first()
+                .select(".msgBody").get(1)
+                .text();
+    }
 
     public static void main(String[] args) throws Exception {
         SqlRuParse sqlRuParse = new SqlRuParse();
@@ -62,6 +76,7 @@ public class SqlRuParse {
             System.out.println(t.getLink());
             System.out.println(t.getText());
             System.out.println(t.getCreatedDate() + " " + t.getCreatedTime());
+            System.out.println(t.getDescription());
         }
     }
 }
