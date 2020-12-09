@@ -17,7 +17,6 @@ public class Post {
         this.createdDate = createdDate;
         this.createdTime = createdTime;
         this.description = description;
-
         this.link = link;
     }
 
