@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public class Post {
-
+    private String id;
     private String text;
     private String description;
     private LocalDate createdDate;
@@ -41,5 +41,8 @@ public class Post {
         return description;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
 }
 
