@@ -1,7 +1,7 @@
 package ru.job4j.grabber;
 
+import java.sql.Date;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public class Post {
@@ -19,7 +19,6 @@ public class Post {
         this.description = description;
         this.link = link;
     }
-
 
     public String getText() {
         return text;
