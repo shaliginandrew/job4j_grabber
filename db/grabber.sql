@@ -6,5 +6,6 @@ create table post
     name text,
     text text,
     link text unique,
-    created date
+    created_date date,
+    created_time time
 );
