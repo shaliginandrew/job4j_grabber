@@ -5,6 +5,9 @@ import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 
 import java.io.*;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.util.List;
 import java.util.Properties;
 
 import static org.quartz.JobBuilder.newJob;
@@ -13,9 +16,10 @@ import static org.quartz.TriggerBuilder.newTrigger;
 
 public class Grabber implements Grab {
     private final Properties cfg = new Properties();
-    private String url = "https://www.sql.ru/forum/job-offers/";
+
 
     public Store store() {
+
         return new PsqlStore(cfg);
     }
 
@@ -26,10 +30,11 @@ public class Grabber implements Grab {
     }
 
     public void cfg() throws IOException {
-        try (InputStream in = PsqlStore.class.getClassLoader()
-                .getResourceAsStream("grabber.properties")) {
+        ClassLoader loader = Grabber.class.getClassLoader();
+        try (InputStream in = loader.getResourceAsStream("grabber.properties")) {
             cfg.load(in);
             PropertyConfigurator.configure(cfg);
+
         }
     }
 
@@ -38,7 +43,6 @@ public class Grabber implements Grab {
         JobDataMap data = new JobDataMap();
         data.put("store", store);
         data.put("parse", parse);
-        data.put("link", url);
         JobDetail job = newJob(GrabJob.class)
                 .usingJobData(data)
                 .build();
@@ -59,15 +63,12 @@ public class Grabber implements Grab {
             JobDataMap map = context.getJobDetail().getJobDataMap();
             Store store = (Store) map.get("store");
             Parse parse = (Parse) map.get("parse");
-            String url = (String) map.get("link");
             try {
-                for (Post post : parse.list(url)) {
-                    store.save(post);
-                }
+                List<Post> postList = parse.list("https://www.sql.ru/forum/job-offers/");
+                postList.forEach(s -> store.save(s));
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         }
     }
 
