@@ -1,5 +1,6 @@
 package ru.job4j.grabber;
 
+import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
@@ -7,6 +8,7 @@ import org.quartz.impl.StdSchedulerFactory;
 import java.io.*;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
@@ -33,6 +35,7 @@ public class Grabber implements Grab {
         ClassLoader loader = Grabber.class.getClassLoader();
         try (InputStream in = loader.getResourceAsStream("grabber.properties")) {
             cfg.load(in);
+
             PropertyConfigurator.configure(cfg);
 
         }
@@ -63,25 +66,15 @@ public class Grabber implements Grab {
             JobDataMap map = context.getJobDetail().getJobDataMap();
             Store store = (Store) map.get("store");
             Parse parse = (Parse) map.get("parse");
-            try {
-                for (int k = 0; k < 6; k++) {
-                    StringBuilder url = new StringBuilder("https://www.sql.ru/forum/job-offers");
-                    if (k > 0) {
-                        url.append("/");
-                        url.append(k);
-                    }
-                    for (Post post : parse.list(url.toString())) {
-                        {
-                            store.save(post);
-                        }
-                    }
+            for (int i = 1; i <= 5; i++) {
+                try {
+                    parse.list("https://www.sql.ru/forum/job-offers/" + i).forEach(store::save);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
             }
         }
     }
-
 
     public static void main(String[] args) throws Exception {
         Grabber grab = new Grabber();

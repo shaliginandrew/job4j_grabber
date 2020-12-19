@@ -47,11 +47,14 @@ public class SqlRuParse implements Parse {
         for (int i = 1; i <= 5; i++) {
             sql.list(url + i);
         }
+        int n = 1;
         for (Post t : sql.posts) {
+            System.out.println(n);
             System.out.println(t.getLink());
             System.out.println(t.getText());
             System.out.println(t.getCreatedDate() + " " + t.getCreatedTime());
             System.out.println(t.getDescription());
+            n++;
         }
 
     }
