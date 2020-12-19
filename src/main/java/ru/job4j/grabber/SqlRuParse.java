@@ -15,12 +15,12 @@ import java.util.Locale;
 
 public class SqlRuParse implements Parse {
 
-    private ArrayList<Post> postData;
+    private ArrayList<Post> posts;
     private LocalDate dateStandart;
     private LocalTime timeStandart;
 
     public SqlRuParse() {
-        this.postData = new ArrayList<>();
+        this.posts = new ArrayList<>();
     }
 
 
@@ -47,7 +47,7 @@ public class SqlRuParse implements Parse {
         for (int i = 1; i <= 5; i++) {
             sql.list(url + i);
         }
-        for (Post t : sql.postData) {
+        for (Post t : sql.posts) {
             System.out.println(t.getLink());
             System.out.println(t.getText());
             System.out.println(t.getCreatedDate() + " " + t.getCreatedTime());
@@ -58,13 +58,7 @@ public class SqlRuParse implements Parse {
 
     @Override
     public List<Post> list(String link) throws IOException {
-        postData.add(detail(link));
-        return postData;
-    }
 
-
-    @Override
-    public Post detail(String link) throws IOException {
         Post postDetails = null;
         ParsingDate parsingDate = new ParsingDate();
         Document doc = Jsoup.connect(link).get();
@@ -77,11 +71,21 @@ public class SqlRuParse implements Parse {
                 Element date = td.parent().child(5);
                 ParsingDate.Datap p = parsingDate.parsing(date);
                 dateAndTimeStandart(p);
-                String description = description(href.attr("href"));
-                postDetails = new Post(href.attr("href"), href.text(), description, dateStandart, timeStandart);
-
+                postDetails = detail(href.attr("href"));
+                posts.add(postDetails);
             }
         }
-        return postDetails;
+        return posts;
+    }
+
+
+    @Override
+    public Post detail(String link) throws IOException {
+        Post post = null;
+        String description = description(link);
+        Document doc = Jsoup.connect(link).get();
+        post = new Post(link, doc.select(".messageHeader")
+                .text(), description, dateStandart, timeStandart);
+        return post;
     }
 }
