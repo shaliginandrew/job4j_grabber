@@ -18,6 +18,7 @@ public class Post {
         this.createdTime = createdTime;
         this.description = description;
         this.link = link;
+        //this.id = id;
     }
 
     public String getText() {
