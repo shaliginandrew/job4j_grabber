@@ -1,4 +1,4 @@
-подготовка пофиля нагрузочного тестированиря
+подготовка профиля нагрузочного тестирования
 
 goaccess otus_loadqa.access.log.5 otus_loadqa.access.log.6 otus_loadqa.access.log.7 otus_loadqa.access.log.9 -o report.html --log-format=COMBINED
 
