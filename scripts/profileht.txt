@@ -1,5 +1,3 @@
-подготовка профиля нагрузочного тестирования
-
 goaccess otus_loadqa.access.log.5 otus_loadqa.access.log.6 otus_loadqa.access.log.7 otus_loadqa.access.log.9 -o report.html --log-format=COMBINED
 
 grep -c 07/Jul/2020 otus_loadqa.access.log.*
@@ -8,6 +6,20 @@ grep 07/Jul/2020 otus_loadqa.access.log.9 | goaccess -o report.html --log-format
 
 grep 07/Jul/2020:21 otus_loadqa.access.log.9 | goaccess -o report.csv --log-format=COMBINED
 
+
+grep -c 19/Jul/2020 otus_loadqa.access.log.*
+
+goaccess otus_loadqa.access.log.2 -o report2.html --log-format=COMBINED
+
 grep 20/Jul/2020 otus_loadqa.access.log.2 | goaccess -o report20jul.html --log-format=COMBINED
 
 grep 20/Jul/2020:19 otus_loadqa.access.log.2 | goaccess -o report20.csv --log-format=COMBINED
+
+
+https://www.w3schools.com/xml/xpath_intro.asp
+https://www.w3schools.com/js/js_json_intro.asp
+https://www.w3schools.com/cssref/css_selectors.asp
+https://regex101.com/
+
+Запуск теста jmeter из консоли windows
+bin/jmeter -n -t C:\otus\lesson3\wiki_example.jmx
