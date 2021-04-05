@@ -7,3 +7,7 @@ grep -c 07/Jul/2020 otus_loadqa.access.log.*
 grep 07/Jul/2020 otus_loadqa.access.log.9 | goaccess -o report.html --log-format=COMBINED
 
 grep 07/Jul/2020:21 otus_loadqa.access.log.9 | goaccess -o report.csv --log-format=COMBINED
+
+grep 20/Jul/2020 otus_loadqa.access.log.2 | goaccess -o report20jul.html --log-format=COMBINED
+
+grep 20/Jul/2020:19 otus_loadqa.access.log.2 | goaccess -o report20.csv --log-format=COMBINED
