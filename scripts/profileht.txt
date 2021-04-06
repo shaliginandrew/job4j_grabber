@@ -23,3 +23,12 @@ https://regex101.com/
 
 Запуск теста jmeter из консоли windows
 bin/jmeter -n -t C:\otus\lesson3\wiki_example.jmx
+
+
+Start Threads count
+${__groovy(Math.ceil(${count_per_hour}/3600*${pacing}*${profile}/100).intValue())}
+
+
+Constant Throughput Timer
+Target throughput(in samples per minute)
+${__groovy((${count_per_hour}/60*${profile}/100).doubleValue())}
