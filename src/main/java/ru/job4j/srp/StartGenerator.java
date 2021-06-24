@@ -12,6 +12,8 @@ public class StartGenerator {
         });
 
         sg.generate(5);
+        SimpleOutPut su = new SimpleOutPut();
+        su.print("Вывод данных");
 
     }
 }
